@@ -1,15 +1,15 @@
 import os
+import warnings
+
 import numpy as np
 import pandas as pd
 import torch
-from torch import nn
-from torch.utils.data import Dataset, DataLoader
-from torchvision import transforms as T
-from torchvision.models import resnet18, alexnet, vgg16, googlenet
-from torchvision.transforms.functional import to_tensor
 from PIL import Image, UnidentifiedImageError
-
-import warnings
+from torch import nn
+from torch.utils.data import DataLoader, Dataset
+from torchvision import transforms as T
+from torchvision.models import alexnet, googlenet, resnet18, vgg16
+from torchvision.transforms.functional import to_tensor
 
 DEVICE=torch.device('cpu')
 
