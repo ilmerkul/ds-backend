@@ -1,16 +1,16 @@
-import io
+from flask import Flask, request
 import logging
+from client import ImageClient
+from models import PlateReader
+import io
 from typing import Tuple
 
-from flask import Flask, request
-
-from models import PlateReader
-from utils import download_image
-
 IMAGES_PATH = './images'
+IMAGE_HOST = 'http://89.169.157.72:8080/images'
 
 app = Flask(__name__)
 model = PlateReader.load_from_file('./model_weights/plate_reader_model.pth')
+image_client = ImageClient(IMAGE_HOST)
 
 
 def model_read_text(image_path: str) -> Tuple[str, int]:
@@ -41,8 +41,9 @@ def get_car_numbers():
         return 'id должен быть числом', 400
 
     image_path = IMAGES_PATH + f"/{id}.jpg"
-    if not download_image(id, image_path):
-        return "ошибка загрузки изображения", 500
+    mes, b = image_client.download_image(id, image_path)
+    if not b:
+        return mes, 500
 
     return model_read_text(image_path)
 
@@ -63,10 +64,12 @@ def get_few_car_numbers():
 
     texts = []
     for id in ids:
-        image_path = IMAGES_PATH + f"/{id}.jpg"
+        image_path = f"{IMAGES_PATH}/{id}.jpg"
 
-        if not download_image(id, image_path):
-            return "ошибка загрузки изображения", 500
+        print(id)
+        mes, b = image_client.download_image(id, image_path)
+        if not b:
+            return mes, 500
 
         text, c = model_read_text(image_path)
 
