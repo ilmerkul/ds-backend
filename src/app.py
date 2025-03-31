@@ -1,9 +1,11 @@
-from flask import Flask, request
+import io
 import logging
+from typing import Tuple
+
+from flask import Flask, request
+
 from client import ImageClient
 from models import PlateReader
-import io
-from typing import Tuple
 
 IMAGES_PATH = './images'
 IMAGE_HOST = 'http://89.169.157.72:8080/images'
